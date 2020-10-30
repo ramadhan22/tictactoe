@@ -1,0 +1,37 @@
+package com.test.tictactoe.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Move {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
+
+    @Column(name = "board_row", nullable = false)
+    private int boardRow;
+
+    @Column(name = "board_column", nullable = false)
+    private int boardColumn;
+
+    private String player;
+
+    @Column(name = "created", nullable = false)
+    private Date created;
+}

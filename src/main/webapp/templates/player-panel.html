@@ -1,0 +1,95 @@
+<div class="container">
+
+    <div class="row" ng-if="errorMessage != null">
+        <div class="alert alert-success">{{successMessage}}</div>
+    </div>
+
+
+    <div class="row">
+
+        <!-- FORM for creating new game -->
+        <div class="col-md-6">
+
+            <h2 class="lead">New game</h2>
+            <form name="createNewBoard" class="form-horizontal" novalidate ng-submit="createNewGame()">
+
+                <div class="form-group">
+                    <label for="piece" class="col-md-2 control-label">Play as:</label>
+                    <div class="col-md-8">
+                        <select required class="form-control" name="piece" id="piece"
+                                ng-model="newGameData.piece">
+                            <option ng-repeat="option in newGameOptions.availablePieces" value="{{option.name}}">{{option.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="column" class="col-md-2 control-label">Column:</label>
+                    <div class="col-md-8">
+                        <input required type="number" min="3" max="10" class="form-control" name="column" id="column"
+                                ng-model="newGameData.column">
+                        </input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="row" class="col-md-2 control-label">Row:</label>
+                    <div class="col-md-8">
+                        <input required type="number" min="3" max="10" class="form-control" name="row" id="row"
+                                ng-model="newGameData.row">
+                        </input>
+                    </div>
+                </div> -->
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-6" style="padding-bottom:50px">
+                        <button type="submit" class="btn btn-md btn-primary" ng-disabled="createNewGame.$invalid">
+                            <span class="glyphicon glyphicon-plus"></span> New Game </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- PLAYER GAMES -->
+        <div class="col-md-6" ng-controller="playerGamesController">
+
+            <table class="table table-hover table-striped table-condensed" ng-show="playerGames.length">
+                <h2 class="lead">In Progress Game</h2>
+                <thead>
+                <td>Started player</td>
+                <td>Second player</td>
+                <td>Game status</td>
+                <td>Created</td>
+                <td></td>
+                </thead>
+                <tbody>
+                <tr ng-repeat="game in playerGames">
+                    <td>{{game.firstPlayer}}</td>
+                    <td>
+                        <span ng-if="!game.player">
+                            COMPUTER
+                        </span>
+                        <span ng-if="game.player != ''">
+                            {{game.secondPlayer}}
+                        </span>
+                    </td>
+                    <td>{{game.gameStatus}}</td>
+                    <td>{{game.created | date:'MM-dd-yyyy HH:mm:ss'}}</td>
+                    <td>
+                        <button class="btn btn-sm" ng-click="loadGame(game.id)">
+                            <span class="glyphicon glyphicon-plus"></span> Load game </button>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div ng-show="!playerGames.length">
+                No games.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
