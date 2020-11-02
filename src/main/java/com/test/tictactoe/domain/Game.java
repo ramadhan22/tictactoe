@@ -41,6 +41,8 @@ public class Game {
 
     private String firstPlayer;
 
+    private int totalRowColumn;
+
     @Enumerated(EnumType.STRING)
     private Piece firstPlayerPieceCode;
 

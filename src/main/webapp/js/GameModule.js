@@ -66,6 +66,7 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
            http.get('/game/' + routeParams.id).success(function (data) {
                 scope.gameProperties = data;
                 gameStatus = scope.gameProperties.gameStatus;
+                prepareBoard(data.totalRowColumn);
                 getMoveHistory();
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed do load game properties";
@@ -132,27 +133,49 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
         }
 
         scope.rows = [
-            [
-                {'id': '11', 'letter': '', 'class': 'box'},
-                {'id': '12', 'letter': '', 'class': 'box'},
-                {'id': '13', 'letter': '', 'class': 'box'}
-            ],
-            [
-                {'id': '21', 'letter': '', 'class': 'box'},
-                {'id': '22', 'letter': '', 'class': 'box'},
-                {'id': '23', 'letter': '', 'class': 'box'}
-            ],
-            [
-                {'id': '31', 'letter': '', 'class': 'box'},
-                {'id': '32', 'letter': '', 'class': 'box'},
-                {'id': '33', 'letter': '', 'class': 'box'}
-            ]
+            // [
+            //     {'id': '11', 'letter': '', 'class': 'box'},
+            //     {'id': '12', 'letter': '', 'class': 'box'},
+            //     {'id': '13', 'letter': '', 'class': 'box'}
+            // ],
+            // [
+            //     {'id': '21', 'letter': '', 'class': 'box'},
+            //     {'id': '22', 'letter': '', 'class': 'box'},
+            //     {'id': '23', 'letter': '', 'class': 'box'}
+            // ],
+            // [
+            //     {'id': '31', 'letter': '', 'class': 'box'},
+            //     {'id': '32', 'letter': '', 'class': 'box'},
+            //     {'id': '33', 'letter': '', 'class': 'box'}
+            // ]
         ];
 
-        angular.forEach(scope.rows, function (row) {
-            row[0].letter = row[1].letter = row[2].letter = '';
-            row[0].class = row[1].class = row[2].class = 'box';
-        });
+        console.log(scope.rows);
+
+        function prepareBoard(totalRowColumn) {
+            for (let indexRow = 1; indexRow <= totalRowColumn; indexRow++) {
+                console.log(indexRow);
+                var column = [];
+                for (let indexColumn = 1; indexColumn <= totalRowColumn; indexColumn++) {
+                    var columnId = ((indexRow*10)+indexColumn);
+                    column.push({
+                        'id': columnId.toString(),
+                        'letter': '',
+                        'class': 'box'
+                    });
+                }
+                scope.rows.push(column);
+    
+                
+            }
+        }
+
+
+        
+        // angular.forEach(scope.rows, function (row) {
+        //     row[0].letter = row[1].letter = row[2].letter = '';
+        //     row[0].class = row[1].class = row[2].class = 'box';
+        // });
 
         scope.markPlayerMove = function (column) {
             checkPlayerTurn().success(function () {

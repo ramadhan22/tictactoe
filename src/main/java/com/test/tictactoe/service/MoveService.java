@@ -47,8 +47,8 @@ public class MoveService {
 
     public Move autoCreateMove(Game game) {
         Move move = new Move();
-        move.setBoardColumn(GameLogic.nextAutoMove(getTakenMovePositionsInGame(game)).getBoardColumn());
-        move.setBoardRow(GameLogic.nextAutoMove(getTakenMovePositionsInGame(game)).getBoardRow());
+        move.setBoardColumn(GameLogic.nextAutoMove(game.getTotalRowColumn(), getTakenMovePositionsInGame(game)).getBoardColumn());
+        move.setBoardRow(GameLogic.nextAutoMove(game.getTotalRowColumn(), getTakenMovePositionsInGame(game)).getBoardRow());
         move.setCreated(new Date());
         move.setPlayer(null);
         move.setGame(game);
@@ -59,11 +59,11 @@ public class MoveService {
     }
 
     public GameStatus checkCurrentGameStatus(Game game) {
-        if (GameLogic.isWinner(getPlayerMovePositionsInGame(game, game.getFirstPlayer()))) {
+        if (GameLogic.isWinner(game.getTotalRowColumn(), getPlayerMovePositionsInGame(game, game.getFirstPlayer()))) {
             return GameStatus.FIRST_PLAYER_WON;
-        } else if (GameLogic.isWinner(getPlayerMovePositionsInGame(game, game.getSecondPlayer()))) {
+        } else if (GameLogic.isWinner(game.getTotalRowColumn(), getPlayerMovePositionsInGame(game, game.getSecondPlayer()))) {
             return GameStatus.SECOND_PLAYER_WON;
-        } else if (GameLogic.isBoardIsFull(getTakenMovePositionsInGame(game))) {
+        } else if (GameLogic.isBoardIsFull(game.getTotalRowColumn(), getTakenMovePositionsInGame(game))) {
             return GameStatus.TIE;
         } else {
             return GameStatus.IN_PROGRESS;

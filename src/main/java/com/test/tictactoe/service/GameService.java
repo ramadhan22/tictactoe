@@ -33,6 +33,7 @@ public class GameService {
         game.setGameType(GameType.COMPUTER);
         game.setFirstPlayerPieceCode(gameDTO.getPiece());
         game.setGameStatus(GameStatus.IN_PROGRESS);
+        game.setTotalRowColumn(gameDTO.getTotalRowColumn());
 
         game.setCreated(new Date());
         gameRepository.save(game);

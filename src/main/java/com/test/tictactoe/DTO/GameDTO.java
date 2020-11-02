@@ -16,8 +16,7 @@ public class GameDTO {
 
     private int id;
     private Piece piece;
-    private int column;
-    private int row;
+    private int totalRowColumn;
 }
 
 
