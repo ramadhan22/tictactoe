@@ -12,13 +12,12 @@
 
             <h2 class="lead">New game</h2>
             <form name="createNewBoard" class="form-horizontal" novalidate ng-submit="createNewGame()">
-
                 <div class="form-group">
-                    <label for="piece" class="col-md-2 control-label">Play as:</label>
+                    <label for="gameType" class="col-md-2 control-label">Game type:</label>
                     <div class="col-md-8">
-                        <select required class="form-control" name="piece" id="piece"
-                                ng-model="newGameData.piece">
-                            <option ng-repeat="option in newGameOptions.availablePieces" value="{{option.name}}">{{option.name}}</option>
+                        <select required class="form-control" name="gameType" id="gameType"
+                                ng-model="newGameData.gameType">
+                            <option ng-repeat="option in newGameOptions.availableGameTypes" value="{{option.name}}">{{option.name}}</option>
                         </select>
                     </div>
                 </div>
@@ -57,11 +56,11 @@
                 <tr ng-repeat="game in playerGames">
                     <td>{{game.firstPlayer}}</td>
                     <td>
-                        <span ng-if="!game.player">
-                            COMPUTER
-                        </span>
-                        <span ng-if="game.player != ''">
+                        <span ng-if="game.player != '' || game.player" >
                             {{game.secondPlayer}}
+                        </span>
+                        <span ng-if="!game.player || game.player == ''">
+                            COMPUTER
                         </span>
                     </td>
                     <td>{{game.gameStatus}}</td>

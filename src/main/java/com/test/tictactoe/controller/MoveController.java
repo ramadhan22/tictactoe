@@ -76,14 +76,4 @@ public class MoveController {
         Long gameId = (Long) httpSession.getAttribute("gameId");
         return moveService.getPlayerMovePositionsInGame(gameService.getGame(gameId), "player");
     }
-
-    @RequestMapping(value = "/turn", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean isPlayerTurn() throws ResourceNotFoundException {
-        Long gameId = (Long) httpSession.getAttribute("gameId");
-        return moveService.isPlayerTurn(gameService.getGame(gameId), gameService.getGame(gameId).getFirstPlayer(),
-                gameService.getGame(gameId).getSecondPlayer());
-    }
-
-
-
 }

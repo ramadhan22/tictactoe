@@ -16,4 +16,6 @@ public class CreateMoveDTO {
     int boardRow;
     @NotNull
     int boardColumn;
+    
+    String player;
 }

@@ -13,6 +13,10 @@ gameModule.controller('newGameController', ['$rootScope', '$scope', '$http', '$l
                 {name: 'O'}
             ],
             selectedPiece: {name: 'O'},
+            availableGameTypes: [
+                {name: 'PLAYER'},
+                {name: 'COMPUTER'}
+            ],
             selectedBoardDimension: {name: 'COMPUTER'}
         };
 
@@ -66,6 +70,7 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
            http.get('/game/' + routeParams.id).success(function (data) {
                 scope.gameProperties = data;
                 gameStatus = scope.gameProperties.gameStatus;
+                scope.currentPlayer = scope.gameProperties.firstPlayer;
                 prepareBoard(data.totalRowColumn);
                 getMoveHistory();
             }).error(function (data, status, headers, config) {
@@ -75,7 +80,6 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
 
         function getMoveHistory() {
             scope.movesInGame = [];
-
           return  http.get('/move/list').success(function (data) {
                 scope.movesInGame = data;
                 scope.playerMoves = [];
@@ -86,14 +90,6 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
                 });
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Failed to load moves in game"
-            });
-        }
-
-        function checkPlayerTurn() {
-            return http.get('/move/turn').success(function (data) {
-                scope.playerTurn = data;
-            }).error(function (data, status, headers, config) {
-                scope.errorMessage = "Failed to get the player turn"
             });
         }
 
@@ -110,6 +106,7 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
                     if (gameStatus != 'IN_PROGRESS') {
                         alert(gameStatus)
                     }
+                    scope.currentPlayer = scope.gameProperties.firstPlayer;
                 });
             }).error(function (data, status, headers, config) {
                 scope.errorMessage = "Can't send the move"
@@ -132,23 +129,7 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
             return true;
         }
 
-        scope.rows = [
-            // [
-            //     {'id': '11', 'letter': '', 'class': 'box'},
-            //     {'id': '12', 'letter': '', 'class': 'box'},
-            //     {'id': '13', 'letter': '', 'class': 'box'}
-            // ],
-            // [
-            //     {'id': '21', 'letter': '', 'class': 'box'},
-            //     {'id': '22', 'letter': '', 'class': 'box'},
-            //     {'id': '23', 'letter': '', 'class': 'box'}
-            // ],
-            // [
-            //     {'id': '31', 'letter': '', 'class': 'box'},
-            //     {'id': '32', 'letter': '', 'class': 'box'},
-            //     {'id': '33', 'letter': '', 'class': 'box'}
-            // ]
-        ];
+        scope.rows = [];
 
         console.log(scope.rows);
 
@@ -170,46 +151,38 @@ gameModule.controller('gameController', ['$rootScope', '$routeParams', '$scope',
             }
         }
 
-
-        
-        // angular.forEach(scope.rows, function (row) {
-        //     row[0].letter = row[1].letter = row[2].letter = '';
-        //     row[0].class = row[1].class = row[2].class = 'box';
-        // });
-
         scope.markPlayerMove = function (column) {
-            checkPlayerTurn().success(function () {
+            var boardRow = parseInt(column.id.charAt(0));
+            var boardColumn = parseInt(column.id.charAt(1));
+            var params = {'boardRow': boardRow, 'boardColumn': boardColumn, 'player': scope.currentPlayer}
 
-                var boardRow = parseInt(column.id.charAt(0));
-                var boardColumn = parseInt(column.id.charAt(1));
-                var params = {'boardRow': boardRow, 'boardColumn': boardColumn}
-
-                if (checkIfBoardCellAvailable(boardRow, boardColumn) == true) {
-                    // if player has a turn
-                    if (scope.playerTurn == true) {
-
-                        http.post("/move/create", params, {
-                            headers: {
-                                'Content-Type': 'application/json; charset=UTF-8'
-                            }
-                        }).success(function () {
-                            getMoveHistory().success(function () {
-
-                                var gameStatus = scope.movesInGame[scope.movesInGame.length - 1].gameStatus;
-                                if (gameStatus == 'IN_PROGRESS') {
-                                    getNextMove();
-                                } else {
-                                    alert(gameStatus)
-                                }
-                            });
-
-                        }).error(function (data, status, headers, config) {
-                            scope.errorMessage = "Can't send the move"
-                        });
-
+            if (checkIfBoardCellAvailable(boardRow, boardColumn) == true) {
+                http.post("/move/create", params, {
+                    headers: {
+                        'Content-Type': 'application/json; charset=UTF-8'
                     }
-                }
-            });
+                }).success(function () {
+                    getMoveHistory().success(function () {
+
+                        var gameStatus = scope.movesInGame[scope.movesInGame.length - 1].gameStatus;
+                        if (gameStatus == 'IN_PROGRESS') {
+                            getNextMove();
+                        } else {
+                            alert(gameStatus)
+                        }
+
+                        // change current player
+                        if (scope.currentPlayer == scope.gameProperties.firstPlayer) {
+                            scope.currentPlayer = scope.gameProperties.secondPlayer;
+                        } else {
+                            scope.currentPlayer = scope.gameProperties.firstPlayer;
+                        }
+                    });
+
+                }).error(function (data, status, headers, config) {
+                    scope.errorMessage = "Can't send the move"
+                });
+            }
         };
 
 

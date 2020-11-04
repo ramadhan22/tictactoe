@@ -8,6 +8,7 @@ import com.test.tictactoe.DTO.GameDTO;
 import com.test.tictactoe.domain.Game;
 import com.test.tictactoe.enums.GameStatus;
 import com.test.tictactoe.enums.GameType;
+import com.test.tictactoe.enums.Piece;
 import com.test.tictactoe.exceptions.ResourceNotFoundException;
 import com.test.tictactoe.repository.GameRepository;
 
@@ -29,14 +30,17 @@ public class GameService {
 
     public Game createNewGame(GameDTO gameDTO) {
         Game game = new Game();
-        game.setFirstPlayer("player");
-        game.setGameType(GameType.COMPUTER);
-        game.setFirstPlayerPieceCode(gameDTO.getPiece());
+        game.setFirstPlayer("Player 1");
+        if (gameDTO.getGameType().toString().equals(GameType.PLAYER.toString())) {
+            game.setSecondPlayer("Player 2");
+        }
+        game.setGameType(gameDTO.getGameType());
+        game.setFirstPlayerPieceCode(Piece.X);
         game.setGameStatus(GameStatus.IN_PROGRESS);
         game.setTotalRowColumn(gameDTO.getTotalRowColumn());
 
         game.setCreated(new Date());
-        gameRepository.save(game);
+        gameRepository.saveAndFlush(game);
 
         return game;
     }

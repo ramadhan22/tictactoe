@@ -37,7 +37,7 @@ public class MoveService {
         move.setBoardColumn(createMoveDTO.getBoardColumn());
         move.setBoardRow(createMoveDTO.getBoardRow());
         move.setCreated(new Date());
-        move.setPlayer("player");
+        move.setPlayer(createMoveDTO.getPlayer());
         move.setGame(game);
 
         moveRepository.save(move);
@@ -84,7 +84,7 @@ public class MoveService {
             moveDTO.setBoardRow(move.getBoardRow());
             moveDTO.setCreated(move.getCreated());
             moveDTO.setGameStatus(move.getGame().getGameStatus());
-            moveDTO.setUserName(move.getPlayer() == null ? GameType.COMPUTER.toString() : "player" );
+            moveDTO.setUserName(move.getPlayer() == null ? GameType.COMPUTER.toString() : move.getPlayer());
             moveDTO.setPlayerPieceCode(currentPiece);
             moves.add(moveDTO);
 
@@ -110,13 +110,4 @@ public class MoveService {
     public int getTheNumberOfPlayerMovesInGame(Game game, String player) {
         return moveRepository.countByGameAndPlayer(game, player);
     }
-
-    public boolean isPlayerTurn(Game game, String firstPlayer, String secondPlayer) {
-        return GameLogic.playerTurn(getTheNumberOfPlayerMovesInGame(game, firstPlayer),
-                getTheNumberOfPlayerMovesInGame(game, secondPlayer));
-    }
-
-
-
-
 }

@@ -15,7 +15,8 @@ import lombok.Setter;
 public class GameDTO {
 
     private int id;
-    private Piece piece;
+    private GameType gameType;
+    // private Piece piece;
     private int totalRowColumn;
 }
 

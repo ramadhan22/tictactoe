@@ -83,16 +83,6 @@ public class GameLogic {
 
     /**
      *
-     * @param numberOfFirstPlayerMovesInGame
-     * @param numberOfSecondPlayerMovesInGame
-     * @return true or false depending on the count of the player's moves
-     */
-    static boolean playerTurn(int numberOfFirstPlayerMovesInGame, int numberOfSecondPlayerMovesInGame) {
-        return numberOfFirstPlayerMovesInGame == numberOfSecondPlayerMovesInGame || numberOfFirstPlayerMovesInGame == 0;
-    }
-
-    /**
-     *
      * @param totalRowColumn Total Row and Column for each game
      */
      static boolean isBoardIsFull(int totalRowColumn, List<Position> takenPositions) {
